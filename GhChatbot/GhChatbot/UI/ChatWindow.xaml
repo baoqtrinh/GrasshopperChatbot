@@ -1,0 +1,66 @@
+<Window x:Class="GhChatbot.UI.ChatWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GhChatbot.UI"
+        xmlns:converters="clr-namespace:GhChatbot.UI.Converters"
+        mc:Ignorable="d"
+        Title="AI Chat Assistant" Height="600" Width="500">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+        
+        <converters:MessageBorderConverter x:Key="MessageBorderConverter" />
+        <converters:MessageBackgroundConverter x:Key="MessageBackgroundConverter" />
+        <converters:MessageAlignmentConverter x:Key="MessageAlignmentConverter" />
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <ScrollViewer x:Name="ChatScrollViewer" Grid.Row="0" VerticalScrollBarVisibility="Auto">
+            <ItemsControl x:Name="ChatMessages" Margin="10">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="5" Padding="10" 
+                                BorderThickness="1" 
+                                BorderBrush="{Binding IsUserMessage, Converter={StaticResource MessageBorderConverter}}"
+                                Background="{Binding IsUserMessage, Converter={StaticResource MessageBackgroundConverter}}"
+                                HorizontalAlignment="{Binding IsUserMessage, Converter={StaticResource MessageAlignmentConverter}}">
+                            <StackPanel>
+                                <TextBlock Text="{Binding SenderName}" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding Content}" TextWrapping="Wrap"/>
+                                <TextBlock Text="{Binding Timestamp, StringFormat='{}{0:HH:mm}'}" 
+                                           FontSize="10" HorizontalAlignment="Right" Opacity="0.6"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        
+        <Grid Grid.Row="1" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBox x:Name="MessageInput" Grid.Column="0" 
+                     Padding="10" Margin="0,0,5,0"
+                     TextWrapping="Wrap" 
+                     AcceptsReturn="True"
+                     Height="50"
+                     KeyDown="MessageInput_KeyDown"
+                     VerticalScrollBarVisibility="Auto"/>
+            
+            <Button x:Name="SendButton" 
+                    Grid.Column="1" 
+                    Content="Send" 
+                    Padding="15,5"
+                    Click="SendButton_Click"/>
+        </Grid>
+    </Grid>
+</Window>
