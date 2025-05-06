@@ -21,7 +21,7 @@ GhChatbot is a Grasshopper plugin for Rhino that provides an AI chatbot interfac
 ### Installation
 
 1. Build the solution in Visual Studio or using the provided tasks in VS Code.
-2. Copy the generated `GhChatbot.gha` file from `GhChatbot/bin/Debug/` to your Grasshopper Libraries folder.
+2. Copy the generated `GhChatbot.gha` file from `GHA` to your Grasshopper Libraries folder.
 3. Launch Rhino and open Grasshopper.
 
 ### Usage
