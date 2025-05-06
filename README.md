@@ -30,7 +30,7 @@ GhChatbot is a Grasshopper plugin for Rhino that provides an AI chatbot interfac
 2. Set the **Local LLM Endpoint** input to your local LLM server URL (e.g., `http://localhost:1234/v1/chat/completions`).
 3. (Optional) Set a **System Prompt** to guide the assistant's behavior.
 4. Use the **Clear Dialog** input to reset the conversation.
-5. Right-click the component and select **Open Chat Window** to start chatting with the AI assistant.
+5. Right-click the component and select **Open Chat Window** to start chatting with the AI assistant (Double-click on the component also work).
 
 ### Outputs
 
