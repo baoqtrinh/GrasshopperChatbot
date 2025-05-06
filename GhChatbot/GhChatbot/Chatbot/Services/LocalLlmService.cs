@@ -24,6 +24,14 @@ namespace Glab.C_AI.Chatbot
             _baseUrl = localLlmEndpoint;
         }
 
+        public void SetDialogHistory(List<ChatMessage> dialog)
+        {
+            _dialogHistory.Clear();
+            if (dialog != null)
+                _dialogHistory.AddRange(dialog);
+        }
+
+
         public async Task<string> SendMessageAsync(string message)
         {
             try

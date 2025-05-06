@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Grasshopper;
 using Grasshopper.Kernel;
 using Grasshopper.GUI.Canvas;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 
 namespace Glab.C_AI.Chatbot.Component
@@ -67,22 +68,18 @@ namespace Glab.C_AI.Chatbot.Component
             }
 
             // Set the system prompt
-            _localLlmService.SystemPrompt = systemPrompt; // Pass the system prompt
+            _localLlmService.SystemPrompt = systemPrompt;
 
             if (clearDialog)
             {
-                _localLlmService.ClearDialogHistory(); // Clear the dialog history in LocalLlmService
-                _dialogJson = "[]"; // Reset the dialog JSON
-
-                // Clear the chat window if it is open
+                _localLlmService.ClearDialogHistory();
+                _dialogJson = "[]";
                 if (_chatWindow != null && _chatWindow.IsVisible)
                 {
                     _chatWindow.ClearMessages();
                 }
-
                 return;
             }
-
 
             // Retrieve the dialog history from the LocalLlmService
             var dialogHistory = _localLlmService.GetDialogHistory();
@@ -95,12 +92,17 @@ namespace Glab.C_AI.Chatbot.Component
             DA.SetData(1, _dialogJson);
         }
 
+        public void RefreshDialogOutput()
+        {
+            this.ExpireSolution(true);
+        }
+
         private string SerializeDialogToJson(List<ChatMessage> dialog)
         {
-            // Serialize the dialog to JSON format
             return JsonSerializer.Serialize(dialog, new JsonSerializerOptions
             {
-                WriteIndented = true
+                WriteIndented = true,
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
             });
         }
 
@@ -127,6 +129,7 @@ namespace Glab.C_AI.Chatbot.Component
                 {
                     _chatWindow = new ChatWindow();
                     _chatWindow.SetService(_localLlmService);
+                    _chatWindow.SetHostComponent(this);
                     _chatWindow.Show();
                 }
             }

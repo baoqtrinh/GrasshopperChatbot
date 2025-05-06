@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.ComponentModel;
+using Glab.C_AI.Chatbot.Component;
 
 namespace Glab.C_AI.Chatbot
 {
@@ -18,6 +19,20 @@ namespace Glab.C_AI.Chatbot
         private bool _isThinkingHidden = true;
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private GhLocalChatbot _hostComponent;
+
+        public void SetHostComponent(GhLocalChatbot component)
+        {
+            _hostComponent = component;
+        }
+
+        // Whenever dialog history is updated (e.g., after sending a message)
+        private void OnDialogHistoryUpdated()
+        {
+            _hostComponent?.RefreshDialogOutput();
+        }
+
 
         public bool IsThinkingHidden
         {
@@ -150,6 +165,9 @@ namespace Glab.C_AI.Chatbot
 
                 // Scroll to bottom
                 ChatScrollViewer.ScrollToBottom();
+
+                // Notify host component to refresh output
+                OnDialogHistoryUpdated();
             }
             catch (Exception ex)
             {
@@ -176,10 +194,6 @@ namespace Glab.C_AI.Chatbot
         {
             if (_currentService is LocalLlmService localLlmService)
             {
-                // Set the system prompt if it exists
-                string systemPrompt = "Your system prompt here"; // Replace with the actual system prompt logic
-                localLlmService.SystemPrompt = systemPrompt;
-
                 // Send the message
                 return await localLlmService.SendMessageAsync(message);
             }
@@ -198,11 +212,13 @@ namespace Glab.C_AI.Chatbot
         public void ClearMessages()
         {
             _messages.Clear();
+            OnDialogHistoryUpdated();
         }
 
         public void ClearDialogHistory()
         {
-            _messages.Clear(); 
+            _messages.Clear();
+            OnDialogHistoryUpdated();
         }
     }
 }
